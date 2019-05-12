@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Fuzzy</title>
+	<link href="data:image/ico;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALAAAAE4AAABNAAAATQAAAE0AAABNAAAATQAAAE0AAABNAAAATQAAAE0AAABNAAAATQAAAE0AAABPAAAAH/r/9On///////////////////////////////////////////////////////////////////////////n/8sv9//vn///////////////////////////////////////////////////////////////////////////8//jM/v/95v///////////////////////////////////////////////////////////////////////////f/6yv///+X//////////////////////////////////////////////////////////////////////////////cj//v7l///////////////////////////////////////////////////////////////////////////////I/v/45P/////////+/////v////7////+/////v////7////+/////v////7////+/////v////7//////v/4xwAA1eUTAND/GADP/xQAzv8NAMz/CwDM/wwAzP8MAMz/DADM/wwAzP8MAMz/DADM/woAzP8GAMz/AADP/wAA68g1HdvlOyXW/z0o1f8+KtX/PyvV/zwo1P84JNL/NCHR/zMg0f8zINH/MyDR/zMg0f8yH9H/MB3R/y8b1P81GvHINh7b5T4n1/9AKtb/QSzW/0Et1v9CLtb/Qi7W/0Iu1v9BLdb/PyvV/z4q1f8+KtX/PynV/z8p1f8/J9n/Oh/zyDce3OVBKdn/QizX/0Mt1/9ELtf/RC7X/0Qv1/9EL9f/RS/X/0Uv1/9FL9f/RC7X/0Mu1/9CK9b/QSja/zgf88g3HtzmQCXa/0Eo2P9CKtj/QirY/0Mr2P9DK9j/QyvY/0Mr2P9DK9j/QivY/0Iq2P9CKdj/QSfY/0El3P84H/PJNiTX4mJS3/9gUN3/YVHd/2FR3f9hUd3/YVHd/2FR3f9hUd3/YVHd/2FR3f9hUd3/YVHd/2BQ3f9gT+D/LxnywgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAA==" rel="icon" type="image/x-icon">
+
+	<style type="text/css">
+		input {
+			width: 50px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		indo mempunyai tali <input type="number" id="nilai" value="50"> cm, menurut indo itu dalah sebuah tali yang pendek karena dia melihat ini dari sisi range antara <input type="number" id="a_range_awal" value="10"> sampai <input type="number" id="a_range_akhir" value="80"> cm. Akan tetapi menurut Nesia itu panjang, range dalam versinya antara <input type="number" id="b_range_awal" value="40"> sampai <input type="number" id="b_range_akhir" value="120"> cm.
+	</div>
+	<input type="submit" id="go">
+	<br>
+	<br>
+	<div>
+		bila range tersebut kita perluas maka menjadi antara 10 - 120 cm, dengan nilai 50 akan termasuk nilai <span id="nilai_lnaik">Mohon tunggu...</span>
+		<br>
+		<canvas id="c_lnaik" width="400" height="300"></canvas>	
+	</div>
+	<div>
+		bila range tersebut kita perluas maka menjadi antara 10 - 120 cm, dengan nilai 50 akan termasuk nilai <span id="nilai_lturun">Mohon tunggu...</span>
+		<br>
+		<canvas id="c_lturun" width="400" height="300"></canvas>	
+	</div>
+	<div>
+		bila range tersebut kita perluas maka menjadi antara 10 - 120 cm, dengan nilai 50 akan termasuk nilai <span id="nilai_segitiga">Mohon tunggu...</span>
+		<br>
+		<canvas id="c_segitiga" width="400" height="300"></canvas>	
+	</div>
+	<div>
+		bila range tersebut kita perluas maka menjadi a = 10, b = 20, c = 80, d = 120, dengan nilai 50 akan termasuk nilai <span id="nilai_trapesium">Mohon tunggu...</span>
+		<br>
+		<canvas id="c_trapesium" width="400" height="300"></canvas>	
+	</div>
+	
+
+	<script type="text/javascript">
+		var c_tinggi	= 200;
+		var c_lebar		= 400;
+		var o_bawah		= 10;
+		var o_kanankiri	= 50;
+		var o_atas		= o_bawah+o_kanankiri;
+
+		var tinggi	= c_tinggi - (o_atas+o_bawah);//tinggi
+		var lebar	= c_lebar - (o_kanankiri*2);//lebar
+
+		var hasil = 0;
+
+		document.getElementById("go").onclick = function () {
+			var nilai			= parseInt(document.getElementById("nilai").value);
+			var a_range_awal	= parseInt(document.getElementById("a_range_awal").value);
+			var a_range_akhir	= parseInt(document.getElementById("a_range_akhir").value);
+			var b_range_awal	= parseInt(document.getElementById("b_range_awal").value);
+			var b_range_akhir	= parseInt(document.getElementById("b_range_akhir").value);
+
+			var c_lnaik		= document.getElementById("c_lnaik");
+			var c_lturun	= document.getElementById("c_lturun");
+			var c_segitiga	= document.getElementById("c_segitiga");
+			var c_trapesium	= document.getElementById("c_trapesium");
+
+			linear_naik(c_lnaik, nilai, a_range_awal, b_range_akhir);
+			linear_turun(c_lturun, nilai, a_range_awal, b_range_akhir);
+			segitiga(c_segitiga, nilai, a_range_awal, b_range_akhir);
+			trapesium(c_trapesium, nilai, a_range_awal, b_range_awal, a_range_akhir, b_range_akhir);
+		};
+
+		function linear_naik(canvas, nilai, range_awal, range_akhir) {
+			var ctx			= canvas.getContext("2d");
+        	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			if (nilai <= range_awal) {
+				hasil = 0;
+			}
+			else if (range_awal < nilai && nilai <= range_akhir) {
+				hasil = (nilai-range_awal)/(range_akhir-range_awal);
+			}
+			
+			var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+			var v_atas = tinggi-(hasil*tinggi)+o_atas;
+
+			ctx.beginPath();
+			ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri bawah
+			ctx.lineTo(c_lebar-o_kanankiri, o_atas);//kanan atas
+			ctx.closePath();
+			ctx.stroke();
+
+			ctx.beginPath();
+			ctx.moveTo(0, c_tinggi-o_bawah);//kiri bawah
+			ctx.lineTo(0, v_atas);//kiri atas
+			ctx.lineTo(v_samping, v_atas);//kanan atas
+			ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+			ctx.closePath();
+			ctx.stroke();
+
+			document.getElementById("nilai_lnaik").innerHTML = hasil;
+		}
+
+		function linear_turun(canvas, nilai, range_awal, range_akhir) {
+			var ctx			= canvas.getContext("2d");
+        	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			if (range_awal <= nilai && nilai < range_akhir) {
+				hasil = (range_akhir-nilai)/(range_akhir-range_awal);
+			}
+			else if (nilai >= range_akhir) {
+				hasil = 0;
+			}
+			
+			var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+			var v_atas = tinggi-(hasil*tinggi)+o_atas;
+
+			ctx.beginPath();
+			ctx.moveTo(o_kanankiri, o_atas);//kiri atas
+			ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kakan bawah
+			ctx.closePath();
+			ctx.stroke();
+
+			ctx.beginPath();
+			ctx.moveTo(0, c_tinggi-o_bawah);//kiri bawah
+			ctx.lineTo(0, v_atas);//kiri atas
+			ctx.lineTo(v_samping, v_atas);//kanan atas
+			ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+			ctx.closePath();
+			ctx.stroke();
+
+			document.getElementById("nilai_lturun").innerHTML = hasil;
+		}
+
+		function segitiga(canvas, nilai, range_awal, range_akhir) {
+			var ctx			= canvas.getContext("2d");
+        	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			var range_tengah	= ((range_akhir-range_awal)/2)+range_awal;
+			if (nilai <= range_awal || nilai >= range_akhir) {
+				hasil = 0;
+			}
+			else if (range_awal <= nilai && nilai <= range_tengah) {
+				hasil = (nilai-range_awal)/(range_tengah-range_awal);
+			}
+			else if(nilai >= range_tengah && nilai <= range_akhir) {
+				hasil = (range_akhir-nilai)/(range_akhir-range_tengah);
+			}
+
+			var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+			var v_atas		= tinggi-(hasil*tinggi)+o_atas;
+
+			ctx.beginPath();
+			ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri
+			ctx.lineTo(o_kanankiri+lebar*((range_tengah-range_awal)/(range_akhir-range_awal)), o_atas);//atas
+			ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kanan
+			ctx.closePath();
+			ctx.stroke();
+
+			ctx.beginPath();
+			ctx.moveTo(0, c_tinggi-o_bawah);//kiri bawah
+			ctx.lineTo(0, v_atas);//kiri atas
+			ctx.lineTo(v_samping, v_atas);//kanan atas
+			ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+			ctx.closePath();
+			ctx.stroke();
+
+			document.getElementById("nilai_segitiga").innerHTML = hasil;
+		}
+
+		function trapesium(canvas, nilai, range_awal, range_tengah_awal, range_tengah_akhir, range_akhir) {
+			var ctx			= canvas.getContext("2d");
+        	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			if (nilai <= range_awal || nilai >= range_akhir) {
+				hasil = 0;
+			}
+			else if (range_awal < nilai && nilai < range_tengah_awal) {
+				hasil = (nilai-range_awal)/(range_tengah_awal-range_awal);
+			}
+			else if (range_tengah_awal <= nilai && nilai <= range_tengah_akhir) {
+				hasil = 1;
+			}
+			else if(range_tengah_akhir < nilai && nilai <= range_akhir) {
+				hasil = -(nilai-range_akhir)/(range_akhir-range_tengah_akhir);
+			}
+			
+			var v_samping	= o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+			var v_atas		= tinggi-(hasil*tinggi)+o_atas;
+
+			ctx.beginPath();
+			ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri bawah
+			ctx.lineTo(o_kanankiri+(lebar*(range_tengah_awal-range_awal)/(range_akhir-range_awal)), o_atas);//kiri atas
+			ctx.lineTo(o_kanankiri+(lebar*(range_tengah_akhir-range_awal)/(range_akhir-range_awal)), o_atas);//kanan atas
+			ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kanan bawah
+			ctx.closePath();
+			ctx.stroke();
+
+			ctx.beginPath();
+			ctx.moveTo(0, c_tinggi-o_bawah);//kiri bawah
+			ctx.lineTo(0, v_atas);//kiri atas
+			ctx.lineTo(v_samping, v_atas);//kanan atas
+			ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+			ctx.closePath();
+			ctx.stroke();
+
+			document.getElementById("nilai_trapesium").innerHTML = hasil;
+		}
+	    </script>
+	</body>
+	</html>

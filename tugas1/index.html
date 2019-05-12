@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Logika Fuzzy &mdash; Himpunan</title>
+  <link href="data:image/ico;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALAAAAE4AAABNAAAATQAAAE0AAABNAAAATQAAAE0AAABNAAAATQAAAE0AAABNAAAATQAAAE0AAABPAAAAH/r/9On///////////////////////////////////////////////////////////////////////////n/8sv9//vn///////////////////////////////////////////////////////////////////////////8//jM/v/95v///////////////////////////////////////////////////////////////////////////f/6yv///+X//////////////////////////////////////////////////////////////////////////////cj//v7l///////////////////////////////////////////////////////////////////////////////I/v/45P/////////+/////v////7////+/////v////7////+/////v////7////+/////v////7//////v/4xwAA1eUTAND/GADP/xQAzv8NAMz/CwDM/wwAzP8MAMz/DADM/wwAzP8MAMz/DADM/woAzP8GAMz/AADP/wAA68g1HdvlOyXW/z0o1f8+KtX/PyvV/zwo1P84JNL/NCHR/zMg0f8zINH/MyDR/zMg0f8yH9H/MB3R/y8b1P81GvHINh7b5T4n1/9AKtb/QSzW/0Et1v9CLtb/Qi7W/0Iu1v9BLdb/PyvV/z4q1f8+KtX/PynV/z8p1f8/J9n/Oh/zyDce3OVBKdn/QizX/0Mt1/9ELtf/RC7X/0Qv1/9EL9f/RS/X/0Uv1/9FL9f/RC7X/0Mu1/9CK9b/QSja/zgf88g3HtzmQCXa/0Eo2P9CKtj/QirY/0Mr2P9DK9j/QyvY/0Mr2P9DK9j/QivY/0Iq2P9CKdj/QSfY/0El3P84H/PJNiTX4mJS3/9gUN3/YVHd/2FR3f9hUd3/YVHd/2FR3f9hUd3/YVHd/2FR3f9hUd3/YVHd/2BQ3f9gT+D/LxnywgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA//8AAA==" rel="icon" type="image/x-icon">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Facebook Opengraph integration: https://developers.facebook.com/docs/sharing/opengraph -->
+  <meta property="og:title" content="">
+  <meta property="og:image" content="">
+  <meta property="og:url" content="">
+  <meta property="og:site_name" content="">
+  <meta property="og:description" content="">
+
+  <!-- Twitter Cards integration: https://dev.twitter.com/cards/  -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:title" content="">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="">
+
+  <!-- Favicon -->
+  <link href="img/favicon.ico" rel="icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Roboto:400,900" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="css/style.css" rel="stylesheet">
+
+  <style type="text/css">
+  input {
+    width: 70px;
+    text-align: center;
+    height: 35px;
+    font-size: 16pt;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-bottom: 2px solid #199EB8;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  .team-img {
+    height: 350px;
+  }
+
+
+          .black_overlay{
+  display: none;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index:1001;
+  -moz-opacity: 0.8;
+  opacity:.80;
+  filter: alpha(opacity=80);
+  }
+
+  .white_content {
+  display: none;
+  position: fixed;
+  top: 10%;
+  left: 25%;
+  width: 50%;
+  height: 500px;
+  padding: 16px;
+  border: 13px solid #808080;
+  background-color: white;
+  z-index:1002;
+  overflow: auto;
+  }
+</style>
+</head>
+
+<body>
+  <!-- Page Content
+    ================================================== -->
+    <!-- Hero -->
+
+    <section class="hero">
+      <div class="container text-center">
+
+        <div class="col-md-12">
+
+          <h1 class="mb-4 pb-0">Fuzzy sudah seperti ini,<br><span style="font-weight: bold; color: yellow;">PSSI</span> bisa apa?</h1>
+
+          <p class="tagline">
+            Indo mempunyai tali sepanjang <input type="number" id="nilai" placeholder="?" value="30"> cm, menurut Indo itu adalah sebuah tali yang panjang karena dia melihat ini dari sisi range antara <input type="number" id="a_range_awal" placeholder="?" value="10"> sampai <input type="number" id="a_range_akhir" placeholder="?" value="80"> cm. Akan tetapi menurut Nesia, tali tersebut merupakan tali yang pendek, range dalam versinya antara <input type="number" id="b_range_awal" placeholder="?" value="40"> sampai <input type="number" id="b_range_akhir" placeholder="?" value="120"> cm.
+          </p>
+          <a class="btn btn-full" href="#hasil" id="go">Lihat</a>
+        </div>
+      </div>
+
+    </section>
+    <!-- /Hero -->
+
+    <!-- Header -->
+    <header id="header">
+      <div class="container">
+        <nav id="nav-menu-container pull-left">
+          <ul class="nav-menu">
+            <li><a href="">Alvriyanto Azis</a></li>
+            <li><a href="">Denis Darwa Saputra</a></li>
+            <li><a href="">Winda Vionita</a></li>
+          </ul>
+        </nav>
+
+        <nav class="nav social-nav pull-right d-none d-lg-inline">
+          <a href="#team"><i>PSSI bisa apa?</i></a>
+        </nav>
+      </div>
+    </header>
+    <!-- #header -->
+    <!-- Features -->
+    <section class="features" id="hasil">
+      <div class="container">
+        <h2 class="text-center">
+          <b>Hasil</b>
+        </h2>
+
+        <div class="row">
+          <div class="feature-col col-lg-6 col-xs-12">
+            <div class="card card-block text-center">
+              <div>
+                  <canvas id="c_lnaik" width="200" height="100" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'; perbesar('l_naik')"></canvas>
+              </div>
+
+              <div>
+                <h3>
+                  Linier Naik (<span id="nilai_lnaik" >Mohon tunggu...</span>)
+                </h3>
+
+                <p>
+                  <span id="keterangan_lnaik">Mohon tunggu...</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-col col-lg-6 col-xs-12">
+            <div class="card card-block text-center">
+              <div>
+                  <canvas id="c_lturun" width="200" height="100" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'; perbesar('l_turun')"></canvas>
+              </div>
+
+              <div>
+                <h3>
+                  Linear Turun (<span id="nilai_lturun">Mohon tunggu...</span>)
+                </h3>
+
+                <p>
+                  <span id="keterangan_lturun">Mohon tunggu...</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="feature-col col-lg-6 col-xs-12">
+            <div class="card card-block text-center">
+              <div>
+                  <canvas id="c_segitiga" width="200" height="100" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'; perbesar('segitiga')"></canvas>
+              </div>
+
+              <div>
+                <h3>
+                  Kurva Segitiga (<span id="nilai_segitiga">Mohon tunggu...</span>)
+                </h3>
+
+                <p>
+                  <span id="keterangan_segitiga">Mohon tunggu...</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-col col-lg-6 col-xs-12">
+            <div class="card card-block text-center">
+              <div>
+                  <canvas id="c_trapesium" width="200" height="100" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'; perbesar('Trapesium')"></canvas>
+              </div>
+
+              <div>
+                <h3>
+                  Kurva Trapesium  (<span id="nilai_trapesium">Mohon tunggu...</span>)
+                </h3>
+
+                <p>
+                  <span id="keterangan_trapesium">Mohon tunggu...</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /Features -->
+
+    <!-- Team -->
+    <section class="team" id="team">
+      <div class="container">
+        <h2 class="text-center">
+          <b>Temui tim kami</b>
+        </h2>
+
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="card card-block">
+              <a><img class="team-img" src="img/team-1.jpg">
+                <div class="card-title-wrap">
+                  <span class="card-title">Alvriyanto Azis</span> <span class="card-text">16650036</span>
+                </div>
+
+                <div class="team-over">
+                  <h4 class="hidden-md-down">
+                    Terhubung dengan saya
+                  </h4>
+                  <nav class="social-nav">
+                    <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
+                  </nav>
+
+                  <p>
+                    Still kiddie, keep wannabe.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="card card-block">
+              <a><img class="team-img" src="img/team-2.jpg">
+                <div class="card-title-wrap">
+                  <span class="card-title">Winda Vionotha</span> <span class="card-text">16650054</span>
+                </div>
+
+                <div class="team-over">
+                  <h4 class="hidden-md-down">
+                    Terhubung dengan saya
+                  </h4>
+
+                  <nav class="social-nav">
+                    <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
+                  </nav>
+
+                  <p>
+                    Stand alone, but neber alone.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="card card-block">
+              <a><img class="team-img" src="img/team-3.jpg">
+                <div class="card-title-wrap">
+                  <span class="card-title">Denis Darwa Saputra</span> <span class="card-text">16650018</span>
+                </div>
+
+                <div class="team-over">
+                  <h4 class="hidden-md-down">
+                    Terhubung dengan saya
+                  </h4>
+
+                  <nav class="social-nav">
+                    <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-linkedin"></i></a> <a href="#"><i class="fa fa-envelope"></i></a>
+                  </nav>
+
+                  <p>
+                    Our Company Tagline lorem ipsum dolor sit amet.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /Team -->
+    <!-- @component: footer -->
+    <a class="scrolltop" href="#"><span class="fa fa-angle-up"></span></a>
+
+    <center>
+      <div id="light" class="white_content"><br><br><br><canvas id="perbesar" width="400" height="200"></canvas><br><br><span id="keterangan"></span><br><br><a href="javascript:void(0)" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none';">Close</a></div>
+
+
+      <div id="fade" class="black_overlay" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"></div>
+    </center>
+
+    <!-- Required JavaScript Libraries -->
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/jquery/jquery-migrate.min.js"></script>
+    <script src="lib/superfish/hoverIntent.js"></script>
+    <script src="lib/superfish/superfish.min.js"></script>
+    <script src="lib/tether/js/tether.min.js"></script>
+    <script src="lib/stellar/stellar.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/easing/easing.js"></script>
+    <script src="lib/stickyjs/sticky.js"></script>
+    <script src="lib/parallax/parallax.js"></script>
+    <script src="lib/lockfixed/lockfixed.min.js"></script>
+
+    <!-- Template Specisifc Custom Javascript File -->
+    <script src="js/custom.js"></script>
+
+    <script src="contactform/contactform.js"></script>
+
+    <script type="text/javascript">
+      var c_tinggi    = 100;
+      var c_lebar     = 200;
+      var o_bawah     = 10;
+      var o_kanankiri = 50;
+      var o_atas      = 10;
+
+      var tinggi  = c_tinggi - (o_atas+o_bawah);//tinggi
+      var lebar = c_lebar - (o_kanankiri*2);//lebar
+
+      var hasil = 0;
+
+      document.getElementById("go").onclick = function () {
+        var nilai     = parseInt(document.getElementById("nilai").value);
+        var a_range_awal  = parseInt(document.getElementById("a_range_awal").value);
+        var a_range_akhir = parseInt(document.getElementById("a_range_akhir").value);
+        var b_range_awal  = parseInt(document.getElementById("b_range_awal").value);
+        var b_range_akhir = parseInt(document.getElementById("b_range_akhir").value);
+
+        var c_lnaik   = document.getElementById("c_lnaik");
+        var c_lturun  = document.getElementById("c_lturun");
+        var c_segitiga  = document.getElementById("c_segitiga");
+        var c_trapesium = document.getElementById("c_trapesium");
+
+        linear_naik(c_lnaik, nilai, a_range_awal, b_range_akhir);
+        linear_turun(c_lturun, nilai, a_range_awal, b_range_akhir);
+        segitiga(c_segitiga, nilai, a_range_awal, b_range_akhir);
+        trapesium(c_trapesium, nilai, a_range_awal, b_range_awal, a_range_akhir, b_range_akhir);
+      };
+
+      function pengantar(ctx) {
+        ctx.beginPath();
+        ctx.moveTo(31, c_tinggi);//kiri bawah
+        ctx.lineTo(31, 0);//kiri atas
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, c_tinggi-o_bawah);//kiri bawah
+        ctx.lineTo(c_lebar, c_tinggi-o_bawah);//kanan bawah
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      function linear_naik(canvas, nilai, range_awal, range_akhir) {
+        var ctx     = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (nilai <= range_awal) {
+          hasil = 0;
+        }
+        else if (range_awal < nilai && nilai <= range_akhir) {
+          hasil = (nilai-range_awal)/(range_akhir-range_awal);
+        }
+
+        var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+        var v_atas = tinggi-(hasil*tinggi)+o_atas;
+
+        pengantar(ctx);
+        ctx.font = "12px 'Courier New'";
+        ctx.fillText(range_awal, o_kanankiri-7, c_tinggi-o_bawah+10);
+        ctx.fillText(range_akhir, c_lebar-o_kanankiri-7, c_tinggi-o_bawah+10);
+        ctx.fillText(nilai, v_samping-7, c_tinggi-o_bawah+10);
+        ctx.fillText(parseFloat(hasil).toFixed(2), 0, v_atas+4);
+        ctx.fillText(1, 20, o_atas+4);
+        ctx.fillText(0, 20, c_tinggi-o_bawah+10);
+
+        ctx.beginPath();
+        ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri bawah
+        ctx.lineTo(c_lebar-o_kanankiri, o_atas);//kanan atas
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(31, c_tinggi-o_bawah);//kiri bawah
+        ctx.lineTo(31, v_atas);//kiri atas
+        ctx.lineTo(v_samping, v_atas);//kanan atas
+        ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+        ctx.closePath();
+        ctx.stroke();
+
+        document.getElementById("nilai_lnaik").innerHTML = parseFloat(hasil).toFixed(2);
+        document.getElementById("keterangan_lnaik").innerHTML = "Apabila range tersebut kita perluas batasnya, maka diperoleh range antara "+range_awal+" cm sampai "+range_akhir+" cm. (dengan: a = "+range_awal+", b = "+nilai+", dan c = "+range_akhir+")";
+      }
+
+      function linear_turun(canvas, nilai, range_awal, range_akhir) {
+        var ctx     = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (range_awal <= nilai && nilai < range_akhir) {
+          hasil = (range_akhir-nilai)/(range_akhir-range_awal);
+        }
+        else if (nilai >= range_akhir) {
+          hasil = 0;
+        }
+        
+        var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+        var v_atas = tinggi-(hasil*tinggi)+o_atas;
+
+        pengantar(ctx);
+        ctx.font = "12px 'Courier New'";
+        ctx.fillText(range_awal, o_kanankiri-7, c_tinggi-o_bawah+10);
+        ctx.fillText(range_akhir, c_lebar-o_kanankiri-7, c_tinggi-o_bawah+10);
+        ctx.fillText(nilai, v_samping-7, c_tinggi-o_bawah+10);
+        ctx.fillText(parseFloat(hasil).toFixed(2), 0, v_atas+4);
+        ctx.fillText(1, 20, o_atas+4);
+        ctx.fillText(0, 20, c_tinggi-o_bawah+10);
+
+        ctx.beginPath();
+        ctx.moveTo(o_kanankiri, o_atas);//kiri atas
+        ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kakan bawah
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(31, c_tinggi-o_bawah);//kiri bawah
+        ctx.lineTo(31, v_atas);//kiri atas
+        ctx.lineTo(v_samping, v_atas);//kanan atas
+        ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+        ctx.closePath();
+        ctx.stroke();
+
+        document.getElementById("nilai_lturun").innerHTML = parseFloat(hasil).toFixed(2);
+        document.getElementById("keterangan_lturun").innerHTML = "Apabila range tersebut kita perluas batasnya, maka diperoleh range antara "+range_awal+" cm sampai "+range_akhir+" cm. (dengan: a = "+range_awal+", b = "+nilai+", dan c = "+range_akhir+")";
+      }
+
+      function segitiga(canvas, nilai, range_awal, range_akhir) {
+        var ctx     = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        var range_tengah  = ((range_akhir-range_awal)/2)+range_awal;
+        if (nilai <= range_awal || nilai >= range_akhir) {
+          hasil = 0;
+        }
+        else if (range_awal <= nilai && nilai <= range_tengah) {
+          hasil = (nilai-range_awal)/(range_tengah-range_awal);
+        }
+        else if(nilai >= range_tengah && nilai <= range_akhir) {
+          hasil = (range_akhir-nilai)/(range_akhir-range_tengah);
+        }
+
+        var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+        var v_atas    = tinggi-(hasil*tinggi)+o_atas;
+
+        pengantar(ctx);
+        ctx.font = "12px 'Courier New'";
+        ctx.fillText(range_awal, o_kanankiri-7, c_tinggi-o_bawah+10);
+        ctx.fillText(range_akhir, c_lebar-o_kanankiri-7, c_tinggi-o_bawah+10);
+        ctx.fillText(nilai, v_samping-7, c_tinggi-o_bawah+10);
+        ctx.fillText(parseFloat(hasil).toFixed(2), 0, v_atas+4);
+        ctx.fillText(1, 20, o_atas+4);
+        ctx.fillText(0, 20, c_tinggi-o_bawah+10);
+
+        ctx.beginPath();
+        ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri
+        ctx.lineTo(o_kanankiri+lebar*((range_tengah-range_awal)/(range_akhir-range_awal)), o_atas);//atas
+        ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kanan
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(31, c_tinggi-o_bawah);//kiri bawah
+        ctx.lineTo(31, v_atas);//kiri atas
+        ctx.lineTo(v_samping, v_atas);//kanan atas
+        ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+        ctx.closePath();
+        ctx.stroke();
+
+        document.getElementById("nilai_segitiga").innerHTML      = parseFloat(hasil).toFixed(2);
+        document.getElementById("keterangan_segitiga").innerHTML = "Apabila range tersebut kita perluas batasnya, maka diperoleh range antara "+range_awal+" cm sampai "+range_akhir+" cm. (dengan: a = "+range_awal+", b = "+range_tengah+", c = "+range_akhir+" dan x = "+nilai+")";
+      }
+
+      function trapesium(canvas, nilai, range_awal, range_tengah_awal, range_tengah_akhir, range_akhir) {
+        var ctx     = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (nilai <= range_awal || nilai >= range_akhir) {
+          hasil = 0;
+        }
+        else if (range_awal < nilai && nilai < range_tengah_awal) {
+          hasil = (nilai-range_awal)/(range_tengah_awal-range_awal);
+        }
+        else if (range_tengah_awal <= nilai && nilai <= range_tengah_akhir) {
+          hasil = 1;
+        }
+        else if(range_tengah_akhir < nilai && nilai <= range_akhir) {
+          hasil = -(nilai-range_akhir)/(range_akhir-range_tengah_akhir);
+        }
+        
+        var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+        var v_atas    = tinggi-(hasil*tinggi)+o_atas;
+
+        pengantar(ctx);
+        ctx.font = "12px 'Courier New'";
+        ctx.fillText(range_awal, o_kanankiri-7, c_tinggi-o_bawah+10);
+        ctx.fillText(range_tengah_awal, o_kanankiri+(lebar*(range_tengah_awal-range_awal)/(range_akhir-range_awal))-7, c_tinggi-o_bawah+10);
+        ctx.fillText(range_tengah_akhir, o_kanankiri+(lebar*(range_tengah_akhir-range_awal)/(range_akhir-range_awal))-7, c_tinggi-o_bawah+10);
+        ctx.fillText(range_akhir, c_lebar-o_kanankiri-7, c_tinggi-o_bawah+10);
+        ctx.fillText(nilai, v_samping-7, c_tinggi-o_bawah+10);
+        ctx.fillText(parseFloat(hasil).toFixed(2), 0, v_atas+4);
+        ctx.fillText(1, 20, o_atas+4);
+        ctx.fillText(0, 20, c_tinggi-o_bawah+10);
+
+        ctx.beginPath();
+        ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri bawah
+        ctx.lineTo(o_kanankiri+(lebar*(range_tengah_awal-range_awal)/(range_akhir-range_awal)), o_atas);//kiri atas
+        ctx.lineTo(o_kanankiri+(lebar*(range_tengah_akhir-range_awal)/(range_akhir-range_awal)), o_atas);//kanan atas
+        ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kanan bawah
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(31, c_tinggi-o_bawah);//kiri bawah
+        ctx.lineTo(31, v_atas);//kiri atas
+        ctx.lineTo(v_samping, v_atas);//kanan atas
+        ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+        ctx.closePath();
+        ctx.stroke();
+
+        document.getElementById("nilai_trapesium").innerHTML = parseFloat(hasil).toFixed(2);
+        document.getElementById("keterangan_trapesium").innerHTML = "Apabila range tersebut kita perluas batasnya, maka diperoleh range antara "+range_awal+" cm sampai "+range_akhir+" cm. (dengan: a = "+range_awal+", b = "+range_tengah_awal+", c = "+range_tengah_akhir+", d = "+range_akhir+" dan x = "+nilai+")";
+      }
+
+      function perbesar(jenis) {
+        var c_tinggi    = 200;
+        var c_lebar     = 400;
+        var o_bawah     = 10;
+        var o_kanankiri = 50;
+        var o_atas      = 10;
+
+        var tinggi  = c_tinggi - (o_atas+o_bawah);//tinggi
+        var lebar   = c_lebar - (o_kanankiri*2);//lebar
+
+        var hasil = 0;
+
+        var nilai         = parseInt(document.getElementById("nilai").value);
+        var a_range_awal  = parseInt(document.getElementById("a_range_awal").value);
+        var a_range_akhir = parseInt(document.getElementById("a_range_akhir").value);
+        var b_range_awal  = parseInt(document.getElementById("b_range_awal").value);
+        var b_range_akhir = parseInt(document.getElementById("b_range_akhir").value);
+
+        //linear_naik(c_lnaik, nilai, a_range_awal, b_range_akhir);
+        //linear_turun(c_lturun, nilai, a_range_awal, b_range_akhir);
+        //segitiga(c_segitiga, nilai, a_range_awal, b_range_akhir);
+        //trapesium(c_trapesium, nilai, a_range_awal, b_range_awal, a_range_akhir, b_range_akhir);
+
+        var canvas  = document.getElementById("perbesar");
+        var ctx     = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.beginPath();
+        ctx.moveTo(31, c_tinggi);//kiri bawah
+        ctx.lineTo(31, 0);//kiri atas
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, c_tinggi-o_bawah);//kiri bawah
+        ctx.lineTo(c_lebar, c_tinggi-o_bawah);//kanan bawah
+        ctx.closePath();
+        ctx.stroke();
+
+        if(jenis.includes("l_naik") === true) {
+          var range_awal = a_range_awal;
+          var range_akhir = b_range_akhir;
+
+          if (nilai <= range_awal) {
+            hasil = 0;
+          }
+          else if (range_awal < nilai && nilai <= range_akhir) {
+            hasil = (nilai-range_awal)/(range_akhir-range_awal);
+          }
+
+          var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+          var v_atas = tinggi-(hasil*tinggi)+o_atas;
+
+          ctx.font = "12px 'Courier New'";
+          ctx.fillText(range_awal, o_kanankiri-7, c_tinggi-o_bawah+10);
+          ctx.fillText(range_akhir, c_lebar-o_kanankiri-7, c_tinggi-o_bawah+10);
+          ctx.fillText(nilai, v_samping-7, c_tinggi-o_bawah+10);
+          ctx.fillText(parseFloat(hasil).toFixed(2), 0, v_atas+4);
+          ctx.fillText(1, 20, o_atas+4);
+          ctx.fillText(0, 20, c_tinggi-o_bawah+10);
+
+          ctx.beginPath();
+          ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri bawah
+          ctx.lineTo(c_lebar-o_kanankiri, o_atas);//kanan atas
+          ctx.closePath();
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(31, c_tinggi-o_bawah);//kiri bawah
+          ctx.lineTo(31, v_atas);//kiri atas
+          ctx.lineTo(v_samping, v_atas);//kanan atas
+          ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+          ctx.closePath();
+          ctx.stroke();
+
+          document.getElementById("keterangan").innerHTML = parseFloat(hasil).toFixed(2)+" | Apabila range tersebut kita perluas batasnya, maka diperoleh range antara "+range_awal+" cm sampai "+range_akhir+" cm. (dengan: a = "+range_awal+", b = "+nilai+", dan c = "+range_akhir+")";
+        }
+        else if (jenis.includes("l_turun") === true) {
+          var range_awal = a_range_awal;
+          var range_akhir = b_range_akhir;
+
+          if (range_awal <= nilai && nilai < range_akhir) {
+            hasil = (range_akhir-nilai)/(range_akhir-range_awal);
+          }
+          else if (nilai >= range_akhir) {
+            hasil = 0;
+          }
+          
+          var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+          var v_atas = tinggi-(hasil*tinggi)+o_atas;
+
+          ctx.font = "12px 'Courier New'";
+          ctx.fillText(range_awal, o_kanankiri-7, c_tinggi-o_bawah+10);
+          ctx.fillText(range_akhir, c_lebar-o_kanankiri-7, c_tinggi-o_bawah+10);
+          ctx.fillText(nilai, v_samping-7, c_tinggi-o_bawah+10);
+          ctx.fillText(parseFloat(hasil).toFixed(2), 0, v_atas+4);
+          ctx.fillText(1, 20, o_atas+4);
+          ctx.fillText(0, 20, c_tinggi-o_bawah+10);
+
+          ctx.beginPath();
+          ctx.moveTo(o_kanankiri, o_atas);//kiri atas
+          ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kakan bawah
+          ctx.closePath();
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(31, c_tinggi-o_bawah);//kiri bawah
+          ctx.lineTo(31, v_atas);//kiri atas
+          ctx.lineTo(v_samping, v_atas);//kanan atas
+          ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+          ctx.closePath();
+          ctx.stroke();
+
+          document.getElementById("keterangan").innerHTML = parseFloat(hasil).toFixed(2)+"Apabila range tersebut kita perluas batasnya, maka diperoleh range antara "+range_awal+" cm sampai "+range_akhir+" cm. (dengan: a = "+range_awal+", b = "+nilai+", dan c = "+range_akhir+")";
+        }
+        else if (jenis.includes("segitiga") === true) {
+          var range_awal = a_range_awal;
+          var range_akhir = b_range_akhir;
+
+          var range_tengah  = ((range_akhir-range_awal)/2)+range_awal;
+          if (nilai <= range_awal || nilai >= range_akhir) {
+            hasil = 0;
+          }
+          else if (range_awal <= nilai && nilai <= range_tengah) {
+            hasil = (nilai-range_awal)/(range_tengah-range_awal);
+          }
+          else if(nilai >= range_tengah && nilai <= range_akhir) {
+            hasil = (range_akhir-nilai)/(range_akhir-range_tengah);
+          }
+
+          var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+          var v_atas    = tinggi-(hasil*tinggi)+o_atas;
+
+          ctx.font = "12px 'Courier New'";
+          ctx.fillText(range_awal, o_kanankiri-7, c_tinggi-o_bawah+10);
+          ctx.fillText(range_akhir, c_lebar-o_kanankiri-7, c_tinggi-o_bawah+10);
+          ctx.fillText(nilai, v_samping-7, c_tinggi-o_bawah+10);
+          ctx.fillText(parseFloat(hasil).toFixed(2), 0, v_atas+4);
+          ctx.fillText(1, 20, o_atas+4);
+          ctx.fillText(0, 20, c_tinggi-o_bawah+10);
+
+          ctx.beginPath();
+          ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri
+          ctx.lineTo(o_kanankiri+lebar*((range_tengah-range_awal)/(range_akhir-range_awal)), o_atas);//atas
+          ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kanan
+          ctx.closePath();
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(31, c_tinggi-o_bawah);//kiri bawah
+          ctx.lineTo(31, v_atas);//kiri atas
+          ctx.lineTo(v_samping, v_atas);//kanan atas
+          ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+          ctx.closePath();
+          ctx.stroke();
+
+          document.getElementById("keterangan").innerHTML = parseFloat(hasil).toFixed(2)+"Apabila range tersebut kita perluas batasnya, maka diperoleh range antara "+range_awal+" cm sampai "+range_akhir+" cm. (dengan: a = "+range_awal+", b = "+range_tengah+", c = "+range_akhir+" dan x = "+nilai+")";
+
+        }
+        else if (jenis.includes("trapesium") === true) {
+          var range_awal = a_range_awal;
+          var range_tengah_awal = b_range_awal;
+          var range_tengah_akhir = a_range_akhir;
+          var range_akhir = b_range_akhir;
+
+          if (nilai <= range_awal || nilai >= range_akhir) {
+            hasil = 0;
+          }
+          else if (range_awal < nilai && nilai < range_tengah_awal) {
+            hasil = (nilai-range_awal)/(range_tengah_awal-range_awal);
+          }
+          else if (range_tengah_awal <= nilai && nilai <= range_tengah_akhir) {
+            hasil = 1;
+          }
+          else if(range_tengah_akhir < nilai && nilai <= range_akhir) {
+            hasil = -(nilai-range_akhir)/(range_akhir-range_tengah_akhir);
+          }
+          
+          var v_samping = o_kanankiri+(lebar*((nilai-range_awal)/(range_akhir-range_awal)));
+          var v_atas    = tinggi-(hasil*tinggi)+o_atas;
+
+          ctx.font = "12px 'Courier New'";
+          ctx.fillText(range_awal, o_kanankiri-7, c_tinggi-o_bawah+10);
+          ctx.fillText(range_tengah_awal, o_kanankiri+(lebar*(range_tengah_awal-range_awal)/(range_akhir-range_awal))-7, c_tinggi-o_bawah+10);
+          ctx.fillText(range_tengah_akhir, o_kanankiri+(lebar*(range_tengah_akhir-range_awal)/(range_akhir-range_awal))-7, c_tinggi-o_bawah+10);
+          ctx.fillText(range_akhir, c_lebar-o_kanankiri-7, c_tinggi-o_bawah+10);
+          ctx.fillText(nilai, v_samping-7, c_tinggi-o_bawah+10);
+          ctx.fillText(parseFloat(hasil).toFixed(2), 0, v_atas+4);
+          ctx.fillText(1, 20, o_atas+4);
+          ctx.fillText(0, 20, c_tinggi-o_bawah+10);
+
+          ctx.beginPath();
+          ctx.moveTo(o_kanankiri, c_tinggi-o_bawah);//kiri bawah
+          ctx.lineTo(o_kanankiri+(lebar*(range_tengah_awal-range_awal)/(range_akhir-range_awal)), o_atas);//kiri atas
+          ctx.lineTo(o_kanankiri+(lebar*(range_tengah_akhir-range_awal)/(range_akhir-range_awal)), o_atas);//kanan atas
+          ctx.lineTo(c_lebar-o_kanankiri, c_tinggi-o_bawah);//kanan bawah
+          ctx.closePath();
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(31, c_tinggi-o_bawah);//kiri bawah
+          ctx.lineTo(31, v_atas);//kiri atas
+          ctx.lineTo(v_samping, v_atas);//kanan atas
+          ctx.lineTo(v_samping, c_tinggi-o_bawah);//kanan bawah
+          ctx.closePath();
+          ctx.stroke();
+
+          document.getElementById("keterangan").innerHTML = parseFloat(hasil).toFixed(2)+"Apabila range tersebut kita perluas batasnya, maka diperoleh range antara "+range_awal+" cm sampai "+range_akhir+" cm. (dengan: a = "+range_awal+", b = "+range_tengah_awal+", c = "+range_tengah_akhir+", d = "+range_akhir+" dan x = "+nilai+")";
+        }
+
+
+
+
+      }
+    </script>
+  </body>
+  </html>
