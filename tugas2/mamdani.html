@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Metode Mamdani - Perkiraan Curah Hujan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        table {
+            border: 1 solid black;
+        }
+        input {
+            width: 120px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- isi -->
+    <b>Kekurangan: salah dalam menghitung centroid bangun trapesium dan rules yang belum lengkap</b>
+    <br><br>
+    <table border="1" cellpadding="7">
+        <thead>
+            <tr>
+                <td>Fungsi</td>
+                <td>Variabel</td>
+                <td>Himpunan Fuzzy</td>
+                <td>Domain</td>
+                <td>Semestas Pembicaraan</td>
+                <td>Input</td>
+                <td>Keterangan</td>
+                <td>Pengaturan</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="12">Input</td>
+                <td rowspan="3"><span name="variabel">Suhu</span></td>
+                <td><span name="suhu_domain_keterangan">Sejuk</span></td>
+                <td><input name="suhu_domain_nilai" onkeyup="sp(`suhu`)" value="22-28"></td>
+                <td rowspan="3"><span id="suhu_sp">Tunggu...</span></td>
+                <td rowspan="3">
+                    <input id="suhu_input_nilai" placeholder="contoh: 28.3">
+                    <br><br>
+                    (<span name="input_keterangan">...</span>)
+                </td>
+                <td rowspan="3">(*C)</td>
+                <td rowspan="16">
+                    <button id="lihat">Kirim</button>
+                    <br><br>
+                    <span id="hasil">...</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span name="suhu_domain_keterangan">Sedang</span></td>
+                <td><input name="suhu_domain_nilai" onkeyup="sp(`suhu`)" value="27-30"></td>
+            </tr>
+            <tr>
+                <td><span name="suhu_domain_keterangan">Panas</span></td>
+                <td><input name="suhu_domain_nilai" onkeyup="sp(`suhu`)" value="29-34"></td>
+            </tr>
+            <tr>
+                <td rowspan="3"><span name="variabel">Tekanan</span></td>
+                <td><span name="tekanan_domain_keterangan">Rendah</span></td>
+                <td><input name="tekanan_domain_nilai" onkeyup="sp(`tekanan`)" value="998-1007"></td>
+                <td rowspan="3"><span id="tekanan_sp">Tunggu...</span></td>
+                <td rowspan="3">
+                    <input id="tekanan_input_nilai" placeholder="contoh: 1008.4">
+                    <br><br>
+                    (<span name="input_keterangan">...</span>)
+                </td>
+                <td rowspan="3">mbar</td>
+            </tr>
+            <tr>
+                <td><span name="tekanan_domain_keterangan">Sedang</span></td>
+                <td><input name="tekanan_domain_nilai" onkeyup="sp(`tekanan`)" value="1006-1009"></td>
+            </tr>
+            <tr>
+                <td><span name="tekanan_domain_keterangan">Tinggi</span></td>
+                <td><input name="tekanan_domain_nilai" onkeyup="sp(`tekanan`)" value="1008-1014"></td>
+            </tr>
+            <tr>
+                <td rowspan="3"><span name="variabel">Kecepatan Angin</span></td>
+                <td><span name="kecepatan_domain_keterangan">Lambat</span></td>
+                <td><input name="kecepatan_domain_nilai" onkeyup="sp(`kecepatan`)" value="0-5"></td>
+                <td rowspan="3"><span id="kecepatan_sp">Tunggu...</span></td>
+                <td rowspan="3">
+                    <input id="kecepatan_input_nilai" placeholder="contoh: 5">
+                    <br><br>
+                    (<span name="input_keterangan">...</span>)
+                </td>
+                <td rowspan="3">(knot)</td>
+            </tr>
+            <tr>
+                <td><span name="kecepatan_domain_keterangan">Sedang</span></td>
+                <td><input name="kecepatan_domain_nilai" onkeyup="sp(`kecepatan`)" value="4-9"></td>
+            </tr>
+            <tr>
+                <td><span name="kecepatan_domain_keterangan">Kencang</span></td>
+                <td><input name="kecepatan_domain_nilai" onkeyup="sp(`kecepatan`)" value="8-12"></td>
+            </tr>
+            <tr>
+                <td rowspan="3"><span name="variabel">Kelembaban Relatif</span></td>
+                <td><span name="kelembaban_domain_keterangan">Kering</span></td>
+                <td><input name="kelembaban_domain_nilai" onkeyup="sp(`kelembaban`)" value="0-70"></td>
+                <td rowspan="3"><span id="kelembaban_sp">Tunggu...</span></td>
+                <td rowspan="3">
+                    <input id="kelembaban_input_nilai" placeholder="contoh: 78.9">
+                    <br><br>
+                    (<span name="input_keterangan">...</span>)
+                </td>
+                <td rowspan="3">(%)</td>
+            </tr>
+            <tr>
+                <td><span name="kelembaban_domain_keterangan">Agak Kering</span></td>
+                <td><input name="kelembaban_domain_nilai" onkeyup="sp(`kelembaban`)" value="65-80"></td>
+            </tr>
+            <tr>
+                <td><span name="kelembaban_domain_keterangan">Basah</span></td>
+                <td><input name="kelembaban_domain_nilai" onkeyup="sp(`kelembaban`)" value="75-100"></td>
+            </tr>
+            <tr>
+                <td rowspan="4">Output</td>
+                <td rowspan="4">Curah Hujan</td>
+                <td><span name="curahhujan_domain_keterangan">Rendah</span></td>
+                <td><input name="curahhujan_domain_nilai" onkeyup="sp(`curahhujan`)" value="0-105"></td>
+                <td rowspan="4"><span id="curahhujan_sp">Tunggu...</span></td>
+                <td rowspan="4">
+                    <span id="curahhujan_keterangan">...</span>
+                </td>
+                <td rowspan="4">(mm^3)</td>
+            </tr>
+            <tr>
+                <td><span name="curahhujan_domain_keterangan">Sedang</span></td>
+                <td><input name="curahhujan_domain_nilai" onkeyup="sp(`curahhujan`)" value="95-305"></td>
+            </tr>
+            <tr>
+                <td><span name="curahhujan_domain_keterangan">Tinggi</span></td>
+                <td><input name="curahhujan_domain_nilai" onkeyup="sp(`curahhujan`)" value="295-405"></td>
+            </tr>
+            <tr>
+                <td><span name="curahhujan_domain_keterangan">Sangat Tinggi</span></td>
+                <td><input name="curahhujan_domain_nilai" onkeyup="sp(`curahhujan`)" value="395-500"></td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- isi -->
+
+    <!-- javascript -->
+    <script src="./jquery.min.js"></script> 
+    <script>
+        //main
+        $(document).ready(function(){
+            $("#lihat").click(function() {
+                alert("Made with Ratih Nur Fatimah ❤.") ;
+            });
+
+            sp("suhu");
+            sp("tekanan");
+            sp("kecepatan");
+            sp("kelembaban");
+            sp("curahhujan");
+
+            $("#suhu_input_nilai").keyup(function() {
+                himpunan("suhu");
+                hasil(aturan());
+            });
+            $("#tekanan_input_nilai").keyup(function() {
+                himpunan("tekanan");
+                hasil(aturan());
+            });
+            $("#kecepatan_input_nilai").keyup(function() {
+                himpunan("kecepatan");
+                hasil(aturan());
+            });
+            $("#kelembaban_input_nilai").keyup(function() {
+                himpunan("kelembaban");
+                hasil(aturan());
+            });
+        });
+
+        //semesta pembicaraan
+        function sp(tag) {
+            var i = 0;
+            var status = "";
+            var range   = [];
+            var domain = document.getElementsByName(tag+"_domain_nilai");//range domain sesuai variabel "tag"
+
+            do {
+                if (domain[i].value.includes("-") === true) {
+                    if (domain[i].value.includes("-") === true) {
+                        var range_split = domain[i].value.split("-");
+                        range = range.concat(range_split);
+                    }
+                    else {
+                        status += "false ";
+                    }
+
+                    range.sort((a, b) => a - b);
+                    $("#"+tag+"_sp").html(range[0]+" - "+range[range.length-1]);
+                    status += "true ";
+                } else {
+                    $("#"+tag+"_sp").html("Range domain yang diinputkan masih salah.");
+                    status += "false ";
+                }
+
+                i++;
+            } while ( (i < domain.length) || (status.includes("false") === true) )
+        }
+
+        //hasil inputan
+        function himpunan(tag) {
+            var keterangan = "";
+            var id = 0;
+            var variabel        = document.getElementsByName("variabel");//mengambil variabel
+            var domain_nilai    = document.getElementsByName(tag+"_domain_nilai");//pengambilan range nilai domain sesuai variabel "tag"
+            var input_nilai     = Number($("#"+tag+"_input_nilai").val());//mengambil nilai yang diinputkan
+            for (let i=0; i<variabel.length; i++) {
+                if (variabel[i].outerText.toLowerCase().includes(tag)) {
+                    id = i;
+                }
+            }
+
+            if (input_nilai !== "") {
+                var keterangan_array = [];
+
+                //identifikasi himpunan fuzzy dari nilai yang diinput berdasarkan range domain himpunan fuzzy
+                var batas_bawah     = domain_nilai[0].value.split("-");//batas bawah => batas_bawah[0]
+                var batas_atas      = domain_nilai[domain_nilai.length-1].value.split("-");//batas atas => batas_atas[1]
+                if (input_nilai<batas_bawah[0] || input_nilai>batas_atas[1]) {
+                    if (input_nilai < batas_bawah[0]) {
+                        keterangan_array.push([0]);
+                    }
+                    else {
+                        keterangan_array.push([domain_nilai.length-1]);
+                    }
+                }
+                else {
+                    for (var index=0; index<domain_nilai.length; index++) {
+                        range = domain_nilai[index].value.split("-");
+                        if (range[0] <= input_nilai && input_nilai <= range[1]) {
+                            keterangan_array.push(index);
+                        }
+                    }
+                }
+
+                console.log(keterangan_array);
+
+                //jika nilai yang diinputkan hanya memiliki 1 anggota himpunan fuzzy, maka hasil inputan diset 1
+                if (keterangan_array.length === 1) {
+                    keterangan = document.getElementsByName(tag+"_domain_keterangan")[keterangan_array[0]].innerText+" => 1.00";
+                } else if (keterangan_array.length === 2 || keterangan_array.length === 3) {//jika nilai yang diinputkan memiliki 2 atau 3 anggota himpuann fuzzy
+                    var hasil = [];
+                    //mengambil range domain, sebagai acuan dalam menghitung hasil inputan
+                    var range_awal    = domain_nilai[keterangan_array[0]].value.split("-");
+                    var range_akhir   = domain_nilai[keterangan_array[1]].value.split("-");
+
+                    //menghitung hasil inputan
+                    if (keterangan_array.length === 2) {
+                        hasil[0]    = (range_awal[1] - input_nilai)/(range_awal[1] - range_akhir[0]);//linear turun = (b-x)/(d-c)
+                        hasil[1]    = (input_nilai - range_akhir[0])/(range_awal[1] - range_akhir[0]);//linear naik = (x-a)/(b-a)
+                    } else if (keterangan_array.length === 3) {
+                        hasil[0]    = (range_awal[1] - input_nilai)/(range_awal[1] - range_akhir[0]);//linear turun = (b-x)/(d-c)
+                        hasil[1]    = 1.00;
+                        hasil[2]    = (input_nilai - range_akhir[0])/(range_awal[1] - range_akhir[0]);//linear naik = (x-a)/(b-a)
+                    }
+
+                    //proses pembentukan output
+                    for (const index in keterangan_array) {
+                        if (hasil[index] !== 0) {
+                            if (keterangan !== "") {
+                                    keterangan += ", ";
+                            }
+
+                            keterangan += document.getElementsByName(tag+"_domain_keterangan")[keterangan_array[index]].innerText+" => "+hasil[index].toFixed(2);
+                        }
+                    }
+
+                } else {
+                    keterangan = "error";
+                }
+
+                document.getElementsByName("input_keterangan")[id].innerText = keterangan;
+            } else {
+                document.getElementsByName("input_keterangan")[id].innerText = keterangan;
+            }
+        }
+
+        //kondisi
+        function kondisi(tag_nilai, i, keterangan="", perumpamaan=[], nilai_temp=[]) {
+            var variabel            = document.getElementsByName("variabel");//variabel
+            var keterangan_sebelum  = keterangan;
+            var nilai_sebelum       = nilai_temp;
+
+            for (const j in tag_nilai[i]) {
+                tag_nilai_split = tag_nilai[i][j].split(" => ");
+                keterangan = keterangan_sebelum+"<br>IF "+document.getElementsByName("variabel")[i].innerText.toLowerCase()+" IS "+tag_nilai_split[0]+" ("+tag_nilai_split[1]+")";
+
+                if (Number(j) === 0) {
+                    nilai = nilai_temp.concat(
+                        [
+                            [
+                                document.getElementsByName("variabel")[i].innerText.toLowerCase(),
+                                tag_nilai_split[0],
+                                tag_nilai_split[1]
+                            ]
+                        ]
+                    );
+                } else {
+                    nilai = nilai_sebelum.concat(
+                        [
+                            [
+                                document.getElementsByName("variabel")[i].innerText.toLowerCase(),
+                                tag_nilai_split[0],
+                                tag_nilai_split[1]
+                            ]
+                        ]
+                    );
+                }
+
+                if (i < tag_nilai.length) {
+                    kondisi(tag_nilai, 1+i, keterangan, perumpamaan, nilai);
+                }
+
+                if (i === tag_nilai.length-1) {
+                    perumpamaan.push([nilai, keterangan]);
+                }
+            }
+
+            return perumpamaan;
+        }
+
+        //aturan logika fuzzy
+        function aturan() {
+            var status = "";
+            var variabel            = document.getElementsByName("variabel");//variabel
+            var input_keterangan    = document.getElementsByName("input_keterangan")//keterangan input
+            for (var i=0; i<input_keterangan.length; i++) {
+                if (input_keterangan[i].textContent.includes("error") === true || input_keterangan[i].textContent.includes("...") === true) {
+                    status += "false ";
+                }
+                else {
+                    status += "true ";
+                }
+            }
+
+            if (status.includes("false") === false) {
+                //pengambilan seluruh hasil input
+                var tag_split = [];
+                var tag_nilai = [];
+                for (var i=0; i<input_keterangan.length; i++) {
+                    if (input_keterangan[i].textContent.includes(",") === true) {
+                        tag_split = input_keterangan[i].textContent.toLowerCase().split(",");
+                    } else {
+                        tag_split = [input_keterangan[i].textContent.toLowerCase()];
+                    }
+
+                    tag_nilai.push(tag_split);
+                }
+
+                //pembentukan aturan logika fuzzy
+                var kondisi_data = kondisi(tag_nilai, 0);
+
+                //rules => suhu | tekanan | kecepatan angin | kelembaban | curah hujan
+                var rules = [
+                    ["sedang", "sedang", "sedang", "agak kering", "rendah"],
+                    ["sedang", "sedang", "sedang", "basah", "rendah"],
+                    ["sedang", "tinggi", "sedang", "agak kering", "rendah"],
+                    ["sedang", "tinggi", "sedang", "basah", "sedang"]
+                ];
+
+                //proses pembentukan output
+                var output_text = "";
+                var sf = [];
+                var curahhujan = [];
+
+                for (const i in kondisi_data) {
+                    var output_nilai = [];
+                    for (const j in kondisi_data) {
+                        output_nilai.push(kondisi_data[i][0][j][2]);
+                    }
+
+                    //pembentukan nilai then dengan cara mencari nilai terkecil
+                    output_nilai.sort((a, b) => a - b);
+
+                    //pembentukan keterangan then dengan cara mencari rules yang tersedia
+                    var output_keterangan = "error";
+                    for (const j in rules) {
+                        if (    kondisi_data[i][0][0][1].trim() == rules[j][0]
+                            &&  kondisi_data[i][0][1][1].trim() == rules[j][1]
+                            &&  kondisi_data[i][0][2][1].trim() == rules[j][2]
+                            &&  kondisi_data[i][0][3][1].trim() == rules[j][3]
+                        ) {
+                            output_keterangan = rules[j][4];
+                        }
+                    }
+
+                    curahhujan.push([output_keterangan, output_nilai[0]]);
+                    output_text += kondisi_data[i][1]+"<br>THEN curah hujan "+output_keterangan+" ("+output_nilai[0]+")<br>";
+                }
+                output_text += "<br>";
+
+                //cetak output
+                $("#curahhujan_keterangan").html(output_text);
+
+                return curahhujan;
+            } else {
+               $("#curahhujan_keterangan").html("error");
+                
+                return "";
+            }
+        }
+
+        function hasil(curahhujan) {
+            if (curahhujan !== "") {
+                var domain_nilai        = document.getElementsByName("curahhujan_domain_nilai");
+                var domain_keterangan   = document.getElementsByName("curahhujan_domain_keterangan");
+                var rendah  = 0;
+                var sedang  = 0;
+                var tinggi  = 0;
+                var atinggi = 0;
+
+                var domain = 0;
+                var variabel = [];
+
+                //mencari ketinggian maksimum masing masing variabel
+                for (const i in curahhujan) {
+                    var domain = [0];
+                    for (var j=0; j<domain_keterangan.length; j++) {
+                        var himpunan            = domain_keterangan[j].innerText+"";
+                        var himpunan_curahhujan = curahhujan[i][0];
+                        if (himpunan.toLowerCase() === himpunan_curahhujan) {
+                            if (Number(domain) < Number(curahhujan[i][1])) {
+                                domain[j] = curahhujan[i][1];
+                            }
+                            else {
+                                domain[j] = domain[j];
+                            }
+
+                            variabel.push([himpunan_curahhujan, domain[j]]);
+                        }
+                    }
+                }
+
+                var domain_max = [];
+                for (var i=0; i<domain_keterangan.length; i++) {
+                    var himpunan    = domain_keterangan[i].innerText+"";
+                    domain_max[i]   = 0;
+                    for (var j=0; j<variabel.length; j++) {
+                        if (himpunan.toLowerCase() === variabel[j][0]) {
+                            if (j === 0) {
+                                domain_max[i] = [himpunan.toLowerCase(), variabel[j][1]];
+                            }
+                            else if (variabel[j][1] > variabel[j-1][1]) {
+                                domain_max[i] = [himpunan.toLowerCase(), variabel[j][1]];
+                            }
+                            else {
+                                domain_max[i] = domain_max[i];
+                            }
+                        }
+                        
+                    }
+
+                    if (domain_max[i] === 0) {
+                        domain_max[i] = [himpunan.toLowerCase(), 0];
+                    }
+                }
+
+                //menghitung luas daerah trapesium dan penegasan (metoda centroid)
+                function fcentroid_trapesium(batas) {
+                    hasil = [];
+                    for (const z in batas) {
+                        var hitung = (Math.pow(batas[z], 3)/3)-((batas[1]*Math.pow(batas[z], 2))/(batas[0]*2));
+                        hasil.push(hitung);
+                    }
+
+                    return hasil[0]-hasil[1];
+                }
+
+                var luas_miring     = [];
+                var centroid_miring = [];
+                for (var i=0; i<domain_max.length-1; i++) {
+                    var range_awal  = (domain_nilai[i].value).split("-");
+                    var range_akhir = (domain_nilai[i+1].value).split("-");
+                    if (domain_max[i][1] !== 0 && domain_max[i+1][1] !== 0) {
+                        var sisisejajar = Number(domain_max[i][1])+Number(domain_max[i+1][1]);
+                        centroid_miring.push(fcentroid_trapesium([range_awal[1], range_akhir[0]]));
+                        luas_miring.push(0.5 * sisisejajar * (Number(range_awal[1])-Number(range_akhir[0])));
+                    }
+                }
+
+                //menghitung luas daerah persegi dan penegasan (metoda centroid)
+                function fcentroid_persegi(batas, nilai) {
+                    hasil = [];
+                    for (const z in batas) {
+                        hasil.push(nilai * (Math.pow(batas[z], 2)/2));
+                    }
+
+                    return hasil[0]-hasil[1];
+                }
+
+                var luas_persegi        = [];
+                var centroid_persegi    = [];
+                for (var i=0; i<domain_max.length; i++) {
+                    if (i === 0 && domain_max[i][1] !== 0) {
+                        var range_awal  = (domain_nilai[i].value).split("-");
+                        var range_akhir = (domain_nilai[i+1].value).split("-");
+                        centroid_persegi.push(fcentroid_persegi([range_akhir[0], range_awal[0]],  domain_max[i][1]));
+                        luas_persegi.push((range_akhir[0] - range_awal[0]) * domain_max[i][1]);
+                    }
+                    else if (i === domain_max.length-1 && domain_max[i][1] !== 0) {
+                        var range_awal  = (domain_nilai[i-1].value).split("-");
+                        var range_akhir = (domain_nilai[i].value).split("-");
+                        centroid_persegi.push(fcentroid_persegi([range_akhir[1], range_awal[1]],  domain_max[i][1]));
+                        luas_persegi.push((range_akhir[1] - range_awal[1]) * domain_max[i][1]);
+                    }
+                    else if (domain_max[i][1] !== 0) {
+                        var range_awal  = (domain_nilai[i-1].value).split("-");
+                        var range_akhir = (domain_nilai[i+1].value).split("-");
+                        centroid_persegi.push(fcentroid_persegi([range_akhir[0], range_awal[1]],  domain_max[i][1]));
+                        luas_persegi.push((range_akhir[0] - range_awal[1]) * domain_max[i][1]);
+                    }
+                }
+
+                //menjumlahkan luas daerah (trapesium dan persegi) dan centroid (trapesium dan persegi)
+                var luas        = 0;
+                var centroid    = 0;
+                for (const index in luas_miring) {
+                    centroid += Number(centroid_miring[index]);
+                    luas += Number(luas_miring[index]);
+                }
+                for (const index in luas_persegi) {
+                    centroid += Number(centroid_persegi[index]);
+                    luas += Number(luas_persegi[index]);
+                }
+
+                //titik pusat (z)
+                var hasil = centroid/luas;
+                
+                var hasil_text = "";
+                hasil_text = "Luas daerah: "+luas;
+                hasil_text += "<br>Centroid: "+centroid;
+                hasil_text += "<br>Hasil: "+hasil;
+                $("#hasil").html(hasil_text);
+                
+                return hasil;
+            } else {
+                return "";
+            }
+        }
+    </script>
+    <!-- //javascript -->
+</body>
+</html>
